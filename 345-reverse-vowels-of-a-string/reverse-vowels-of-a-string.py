@@ -10,16 +10,15 @@ class Solution(object):
 
         while start < end:
             
-            if string[start] not in VOWELS:
+            while start < end and string[start] not in VOWELS:
                 start += 1
                 
-            if string[end] not in VOWELS:
+            while start < end and string[end] not in VOWELS:
                 end -= 1
                 
-            if string[start] in VOWELS and string[end] in VOWELS:
-                string[start], string[end] = string[end], s[start]
-                start += 1
-                end -= 1
+            string[start], string[end] = string[end], s[start]
+            start += 1
+            end -= 1
                
         return ''.join(string)
         
