@@ -8,9 +8,10 @@ class Solution(object):
         rows = len(board)
         cols = len(board[0])
 
-        # finds the cells we need to crush
-        def find():
-            to_crush = set()
+        # finds the cells we need to crush and crushes them
+        def find_and_crush():
+            
+            done = True
 
             # finds horizontal trios
             for r in range(1, rows-1):
@@ -18,11 +19,15 @@ class Solution(object):
 
                     if board[r][c] == 0:
                         continue
+                    
+                    # set trios to their negative value to look for combos with > 3 (we just look for 3 at once)
+                    # ie. 1 1 1 1 1 --> -1 -1 -1 1 1 (5 will still get crushed)
+                    if (abs(board[r][c]) == abs(board[r-1][c]) and abs(board[r][c]) == abs(board[r+1][c])):
+                        board[r][c] = -abs(board[r][c])
+                        board[r+1][c] = -abs(board[r+1][c])
+                        board[r-1][c] = -abs(board[r-1][c])
 
-                    if (board[r][c] == board[r-1][c] and board[r][c] == board[r+1][c]):
-                        to_crush.add((r, c))
-                        to_crush.add((r-1, c))
-                        to_crush.add((r+1, c))
+                        done = False
 
             # finds vertical trios
             for r in range(rows):
@@ -31,18 +36,20 @@ class Solution(object):
                     if board[r][c] == 0:
                         continue
 
-                    if (board[r][c] == board[r][c-1] and board[r][c] == board[r][c+1]):
-                        to_crush.add((r, c))
-                        to_crush.add((r, c-1))
-                        to_crush.add((r, c+1))
+                    if (abs(board[r][c]) == abs(board[r][c-1]) and abs(board[r][c]) == abs(board[r][c+1])):
+                        board[r][c] = -abs(board[r][c])
+                        board[r][c-1] = -abs(board[r][c-1])
+                        board[r][c+1] = -abs(board[r][c+1])
 
-            return to_crush
+                        done = False
 
-        # crushes the cells found by setting it to 0
-        def crush(to_crush):
+            # crush them
+            for r in range(rows):
+                for c in range(cols):
+                    if board[r][c] < 0:
+                        board[r][c] = 0
 
-            for (r,c) in to_crush:
-                board[r][c] = 0
+            return done
 
         # bubble 0s to the top to "drop" non 0 cells
         def drop():
@@ -63,11 +70,8 @@ class Solution(object):
                         zero -= 1
 
         # find cells to crush, crush them, drop them and continue until the board is stable
-        to_crush = find()
-        while to_crush:
-            crush(to_crush)
+        while not find_and_crush():
             drop()
-            to_crush = find()
 
         return board
 
