@@ -18,10 +18,13 @@ class Solution:
         costs.sort(key = lambda x : x[1] - x[0])
 
         cost = 0
-        n = len(costs) // 2
-
-        for i in range(n):
-           cost += costs[i][1] + costs[i+n][0]
+        
+        for i in range(len(costs)):
+            if i < len(costs) / 2:
+                cost += costs[i][1]
+            else:
+                cost += costs[i][0]
                 
+
         return cost
         
