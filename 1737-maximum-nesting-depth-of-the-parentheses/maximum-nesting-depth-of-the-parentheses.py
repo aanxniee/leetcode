@@ -6,10 +6,11 @@ class Solution:
         for c in s:
             if c == "(":
                 counter += 1
+                max_counter = max(max_counter, counter)
             elif c == ")":
                 counter -= 1
 
-            max_counter = max(max_counter, counter)
+            
 
         return max_counter
 
