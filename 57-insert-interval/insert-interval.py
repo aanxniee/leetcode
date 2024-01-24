@@ -1,17 +1,27 @@
+"""
+binary search
+first the first interval in the list having a start value greater
+than the start value of newInterval
+"""
 class Solution:
     def insert(self, intervals: List[List[int]], newInterval: List[int]) -> List[List[int]]:
 
-        intervals.append(newInterval)
-        intervals.sort(key = lambda x : x[0])
+       
+        left, right = [], []
 
-        merged = [intervals[0]]
+        for i in intervals:
 
-        for i in range(1, len(intervals)):
-            if intervals[i][0] <= merged[-1][1]:
-                merged[-1][1] = max(intervals[i][1], merged[-1][1])
+            # end of current interval is less than start of new interval, this interval would appear left of new interval
+            if i[1] < newInterval[0]:
+                left.append(i),
 
+            # start of current interval is greater than end of new interval, this interval would appear right of the new interval
+            elif i[0] > newInterval[1]:
+                right.append(i),
+
+            # either the start is less or the end is greater, find the wider interval
             else:
-                merged.append(intervals[i])
+                newInterval = (min(newInterval[0], i[0]), max(newInterval[1], i[1]))
 
-        return merged
+        return left + [newInterval] + right
         
